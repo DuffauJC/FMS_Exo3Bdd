@@ -39,13 +39,13 @@ public class TestJdbc {
 		insertArticle(art,url,login,password);
 
 		// mise à jour article
-		updateArticle(url,login,password);
+		updateArticle(4,url,login,password);
 		
 		// suppression d'un article
-		deleteArticle(url,login,password);
+		deleteArticle(6,url,login,password);
 		
 		// lecture d'un article
-		readArticleById(articles,url,login,password);
+		readArticleById(14,articles,url,login,password);
 		
 		// lecture de la table articles
 		readArticles(articles,url,login,password);
@@ -81,14 +81,15 @@ public class TestJdbc {
 	}
 	/**
 	 * 
+	 * @param i 
 	 * @param url
 	 * @param login
 	 * @param password
 	 * @throws SQLException
 	 */
-	private static void updateArticle(String url, String login, String password) throws SQLException {
+	private static void updateArticle(int id, String url, String login, String password) throws SQLException {
 		try(Connection connection=DriverManager.getConnection(url,login,password)){// connection de java sql
-			String strSql="UPDATE t_articles SET brand = ?, UnitaryPrice = ? WHERE IdArticle = 4;";						// une fois connecté, réalisation d'un requête
+			String strSql="UPDATE t_articles SET brand = ?, UnitaryPrice = ? WHERE IdArticle ="+id+";";						// une fois connecté, réalisation d'un requête
 			try(PreparedStatement ps =connection.prepareStatement(strSql)){ // de java.sql
 				ps.setString(1, "Turban violet");
 				ps.setDouble(2, 5.99);
@@ -111,11 +112,11 @@ public class TestJdbc {
 	 * @param password
 	 * @throws SQLException
 	 */
-	private static void deleteArticle(String url, String login, String password) throws SQLException {
+	private static void deleteArticle(int id,String url, String login, String password) throws SQLException {
 		try(Connection connection=DriverManager.getConnection(url,login,password)){// connection de java sql
 			String strSql="DELETE FROM t_articles WHERE IdArticle = ?;";						// une fois connecté, réalisation d'un requête
 			try(PreparedStatement ps =connection.prepareStatement(strSql)){ // de java.sql
-				ps.setInt(1, 8);
+				ps.setInt(1, id);
 			
 				if (ps.executeUpdate()==1) {
 					System.out.println("suppression ok");
@@ -136,11 +137,11 @@ public class TestJdbc {
 	 * @param password
 	 * @throws SQLException
 	 */
-	private static void readArticleById(ArrayList<Article> articles, String url, String login, String password) throws SQLException {
+	private static void readArticleById(int id,ArrayList<Article> articles, String url, String login, String password) throws SQLException {
 		try(Connection connection=DriverManager.getConnection(url,login,password)){// connection de java sql
 			String strSql="SELECT * FROM t_articles WHERE IdArticle = ?;";		// une fois connecté, réalisation d'un requête
 			try(PreparedStatement ps =connection.prepareStatement(strSql)){ // de java.sql
-				ps.setInt(1, 14);
+				ps.setInt(1, id);
 				ResultSet rs=ps.executeQuery();  // ResultSet de java.sql
 					while (rs.next()) {
 						int rsidArticle=rs.getInt(1);  // soit index(de 1 à n) de la colonne, soit le nom de la colonne
